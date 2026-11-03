@@ -1,0 +1,10 @@
+node_modules/
+coverage/
+android/
+ios/
+demo/
+tests/
+__tests__/
+.github/
+.vscode/
+*.log
