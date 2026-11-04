@@ -19,7 +19,7 @@ export function KeyboardProvider({
       (previous.current.isVisible !== keyboard.isVisible ||
         previous.current.height !== keyboard.height)
     ) {
-      console.debug('[keyboard-shepherd]', keyboard);
+      console.debug('[keyboard-toolkit]', keyboard);
     }
     previous.current = keyboard;
   }, [debug, keyboard]);
