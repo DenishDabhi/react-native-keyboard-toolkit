@@ -3,6 +3,15 @@
   "version": "0.1.0",
   "description": "Keyboard-aware scrolling, layout helpers, and focus utilities for React Native.",
   "license": "MIT",
+  "author": "Denish Dabhi <dabhidenish57@gmail.com>",
+  "repository": {
+    "type": "git",
+    "url": "git+https://github.com/DenishDabhi/react-native-keyboard-toolkit.git"
+  },
+  "bugs": {
+    "url": "https://github.com/DenishDabhi/react-native-keyboard-toolkit/issues"
+  },
+  "homepage": "https://github.com/DenishDabhi/react-native-keyboard-toolkit#readme",
   "main": "dist/index.js",
   "react-native": "src/index.ts",
   "types": "dist/index.d.ts",
