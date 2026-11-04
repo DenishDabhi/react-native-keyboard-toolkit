@@ -1,11 +1,18 @@
 import type {
+  ScrollView,
   ScrollViewProps,
   StyleProp,
   TextInput,
+  View,
   ViewProps,
   ViewStyle,
 } from 'react-native';
-import type { ComponentPropsWithRef, ReactNode, RefObject } from 'react';
+import type {
+  ComponentPropsWithRef,
+  ElementRef,
+  ReactNode,
+  RefObject,
+} from 'react';
 
 type RefTarget<T> = T extends RefObject<infer Value>
   ? NonNullable<Value>
@@ -14,6 +21,9 @@ type RefTarget<T> = T extends RefObject<infer Value>
 export type TextInputRef = RefTarget<
   NonNullable<ComponentPropsWithRef<typeof TextInput>['ref']>
 >;
+
+export type KeyboardAwareScrollViewRef = ElementRef<typeof ScrollView>;
+export type KeyboardAwareViewRef = ElementRef<typeof View>;
 
 /** Layout strategies supported by the keyboard-aware components. */
 export type KeyboardBehavior =

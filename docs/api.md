@@ -15,13 +15,15 @@ Extends React Native `ScrollViewProps`.
 The component measures its viewport and the focused native input. It adds
 scrollable bottom space based on measured viewport/keyboard-frame overlap,
 avoiding blindly adding the full keyboard height when the OS has resized the
-window. Existing numeric bottom padding is preserved.
+window. Existing numeric bottom padding is preserved. Its ref points to the
+underlying React Native `ScrollView`.
 
 ## `KeyboardAwareView`
 
 Extends `ViewProps`. Supports `behavior`, `keyboardSpacing`, and `enabled`.
 Smart, scroll, and padding add bottom padding for the measured overlap. Resize
 and none do not add padding. This view does not scroll to reveal a hidden child.
+Its ref points to the underlying React Native `View`.
 
 ## `KeyboardProvider`
 
@@ -63,7 +65,9 @@ animationDuration }`.
 
 The package entry point also exports `calculateKeyboardOverlap`,
 `calculateScrollOffset`, `focusInput`, `getFocusedInput`, `isAndroid`, `isIOS`,
-`measureFocusedInput`, and the `TextInputRef` type used by toolbar refs.
+`measureFocusedInput`, and the `TextInputRef` type used by toolbar refs. The
+`KeyboardAwareScrollViewRef` and `KeyboardAwareViewRef` types describe the
+corresponding component refs.
 
 `calculateKeyboardOverlap(viewport, keyboardHeight, keyboardTop?)` returns the
 measured overlap. `calculateScrollOffset(input, viewport, keyboardHeight,

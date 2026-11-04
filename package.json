@@ -2,8 +2,9 @@
   "name": "react-native-keyboard-toolkit",
   "version": "1.0.0",
   "description": "Keyboard-aware ScrollView, keyboard avoiding view, input focus navigation, and keyboard state hooks for React Native on iOS and Android.",
-  "license": "MIT",
   "author": "Denish Dabhi <dabhidenish57@gmail.com>",
+  "license": "MIT",
+  "homepage": "https://github.com/DenishDabhi/react-native-keyboard-toolkit#readme",
   "repository": {
     "type": "git",
     "url": "git+https://github.com/DenishDabhi/react-native-keyboard-toolkit.git"
@@ -11,7 +12,6 @@
   "bugs": {
     "url": "https://github.com/DenishDabhi/react-native-keyboard-toolkit/issues"
   },
-  "homepage": "https://github.com/DenishDabhi/react-native-keyboard-toolkit#readme",
   "main": "dist/index.js",
   "react-native": "src/index.ts",
   "types": "dist/index.d.ts",
@@ -21,10 +21,7 @@
     "docs",
     "README.md",
     "CHANGELOG.md",
-    "LICENSE",
-    "CONTRIBUTING.md",
-    "CODE_OF_CONDUCT.md",
-    "SECURITY.md"
+    "LICENSE"
   ],
   "exports": {
     ".": {
@@ -58,7 +55,7 @@
     "build": "tsc -p tsconfig.build.json",
     "typecheck": "tsc --noEmit -p tsconfig.json",
     "lint": "eslint src tests demo App.tsx --ext .ts,.tsx",
-    "format:check": "prettier --check src tests demo App.tsx package.json README.md docs",
+    "format:check": "prettier --check src tests demo App.tsx package.json README.md CHANGELOG.md docs",
     "start": "react-native start",
     "test": "jest --runInBand",
     "validate": "npm run typecheck && npm run lint && npm run format:check && npm test && npm run build && npm pack --dry-run",
@@ -91,8 +88,5 @@
     "react-native-safe-area-context": "^5.5.2",
     "react-test-renderer": "19.3.0",
     "typescript": "^6.0.3"
-  },
-  "engines": {
-    "node": ">= 22.11.0"
   }
 }

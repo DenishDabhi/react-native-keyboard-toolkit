@@ -1,6 +1,10 @@
 import { TextInput } from 'react-native';
-import { measureFocusedInput } from '../../src/utils/focusManager';
-import { getFocusedInput } from '../../src/utils/focusManager';
+import {
+  focusInput,
+  getFocusedInput,
+  measureFocusedInput,
+} from '../../src/utils/focusManager';
+import type { TextInputRef } from '../../src/types';
 
 describe('measureFocusedInput', () => {
   it('returns measured window coordinates', async () => {
@@ -25,5 +29,16 @@ describe('measureFocusedInput', () => {
 
     expect(getFocusedInput()).toBe(input);
     focusedInput.mockRestore();
+  });
+});
+
+describe('focusInput', () => {
+  it('focuses a mounted input and reports whether a ref is available', () => {
+    const focus = jest.fn();
+    const input = { focus } as unknown as TextInputRef;
+
+    expect(focusInput({ current: input })).toBe(true);
+    expect(focus).toHaveBeenCalledTimes(1);
+    expect(focusInput({ current: null })).toBe(false);
   });
 });

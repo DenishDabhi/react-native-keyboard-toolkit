@@ -1,7 +1,8 @@
-import React from 'react';
+import React, { createRef } from 'react';
 import ReactTestRenderer, { act } from 'react-test-renderer';
 import { Keyboard, StyleSheet, View, type KeyboardEvent } from 'react-native';
 import { KeyboardAwareView } from '../../src/components/KeyboardAwareView';
+import type { KeyboardAwareViewRef } from '../../src/types';
 import {
   getKeyboardState,
   resetKeyboardStateForTests,
@@ -27,6 +28,18 @@ describe('KeyboardAwareView', () => {
     expect(renderer!.root.findByProps({ testID: 'child' })).toBeTruthy();
 
     await act(async () => renderer!.unmount());
+  });
+
+  it('forwards a ref to the underlying View', async () => {
+    const ref = createRef<KeyboardAwareViewRef>();
+    let renderer: ReactTestRenderer.ReactTestRenderer;
+    await act(async () => {
+      renderer = ReactTestRenderer.create(<KeyboardAwareView ref={ref} />);
+    });
+
+    expect(ref.current).toBe(renderer!.root.findByType(View).instance);
+    await act(async () => renderer!.unmount());
+    expect(ref.current).toBeNull();
   });
 
   it('preserves existing padding until the visible overlap can be measured', async () => {
