@@ -17,11 +17,15 @@ export function useKeyboardAnimation(): {
 
   useEffect(() => {
     let active = true;
-    AccessibilityInfo.isReduceMotionEnabled().then(enabled => {
-      if (active) {
-        setReduceMotion(enabled);
-      }
-    });
+    AccessibilityInfo.isReduceMotionEnabled()
+      .then(enabled => {
+        if (active) {
+          setReduceMotion(enabled);
+        }
+      })
+      .catch(() => {
+        // Keep animations enabled when the platform preference cannot be read.
+      });
     const subscription = AccessibilityInfo.addEventListener(
       'reduceMotionChanged',
       setReduceMotion,

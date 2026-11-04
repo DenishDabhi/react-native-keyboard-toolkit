@@ -1,8 +1,14 @@
 # react-native-keyboard-toolkit
 
-Keyboard-aware scrolling, layout helpers, and focus utilities for React Native.
-It uses React Native's keyboard events and view measurements; it does not add a
-native module.
+A lightweight **React Native keyboard toolkit** for iOS and Android. It
+provides a keyboard-aware `ScrollView`, keyboard-avoiding `View`, keyboard
+toolbar with Previous/Next input navigation, keyboard dismissal controls, and
+keyboard visibility/height/animation hooks.
+
+The package uses React Native's keyboard events and view measurements. It does
+not add native modules, require manual linking, or require an Expo config
+plugin. It is designed for React Native forms, login screens, long scrollable
+forms, focused `TextInput` handling, and keyboard layout adjustments.
 
 ## Features
 
@@ -426,6 +432,28 @@ with older code, but normal use should rely on ref-based automatic tracking.
   expected when Android has already resized the measured viewport.
 - **State does not update:** verify that the input opens the software keyboard;
   a hardware keyboard may not produce a visible software keyboard frame.
+
+## Common questions
+
+### Does this package require native linking or CocoaPods changes?
+
+No. The toolkit is implemented in JavaScript/TypeScript using React Native APIs.
+Install it with your package manager and rebuild your app as you normally do
+after adding a dependency.
+
+### Does it replace `KeyboardAvoidingView`?
+
+It provides additional keyboard-aware scrolling, measured keyboard overlap,
+input navigation, and keyboard-state hooks. You can use the components that fit
+your screen; avoid stacking multiple keyboard-adjustment wrappers around the
+same content unless the combined spacing is intentional.
+
+### Why might a focused input not scroll into view on Android?
+
+Check that the Activity uses `android:windowSoftInputMode="adjustResize"`,
+that the input is inside `KeyboardAwareScrollView`, and that no parent layout
+clips or independently offsets the same content. See [Android notes](docs/android.md)
+and [Troubleshooting](docs/troubleshooting.md).
 
 ## Demo and validation
 
