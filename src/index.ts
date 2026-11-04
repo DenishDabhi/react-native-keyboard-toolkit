@@ -23,7 +23,9 @@ export {
 export type {
   FocusedInputLayout,
   KeyboardAwareScrollViewProps,
+  KeyboardAwareScrollViewRef,
   KeyboardAwareViewProps,
+  KeyboardAwareViewRef,
   KeyboardBehavior,
   KeyboardDismissButtonProps,
   KeyboardProviderProps,

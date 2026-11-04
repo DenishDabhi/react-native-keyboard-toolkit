@@ -18,9 +18,9 @@ describe('KeyboardToolbar', () => {
     resetKeyboardStateForTests();
   });
 
-  it('can remain visible and render custom content', async () => {
+  it('can remain visible and render custom content', () => {
     let renderer: ReactTestRenderer.ReactTestRenderer;
-    await act(async () => {
+    act(() => {
       renderer = ReactTestRenderer.create(
         <KeyboardToolbar alwaysVisible>
           <Text testID="custom-toolbar">Custom controls</Text>
@@ -31,7 +31,7 @@ describe('KeyboardToolbar', () => {
     expect(
       renderer!.root.findByProps({ testID: 'custom-toolbar' }),
     ).toBeTruthy();
-    await act(async () => renderer!.unmount());
+    act(() => renderer!.unmount());
   });
 
   it('focuses the next provided input', async () => {
