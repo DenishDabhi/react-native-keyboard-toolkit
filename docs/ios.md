@@ -7,6 +7,11 @@ temporary scroll range, so safe-area-constrained viewports do not blindly add
 the full keyboard height. The library does not set safe-area, navigation, or
 modal presentation configuration.
 
+An absolutely positioned `KeyboardAwareView` uses the same keyboard frame and
+event duration to animate a sticky footer above the keyboard. Place it outside
+the scroll view and account for its height in the scroll view's content padding
+and `keyboardSpacing`.
+
 ## Device checklist
 
 - Test iPhone and iPad layouts with safe areas and the home indicator.

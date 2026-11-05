@@ -9,6 +9,14 @@
 - If a custom input wrapper delays focus, call `refresh()` from
   `useFocusedInput` after its layout settles.
 
+## A sticky submit button is behind the keyboard
+
+Wrap the footer in `KeyboardAwareView` and set `position: 'absolute'` on that
+component's style. The view then measures its bottom edge and moves above the
+keyboard by the covered distance plus `keyboardSpacing`. Keep it outside the
+scroll view and give the scroll content enough bottom padding to scroll above
+the footer.
+
 ## Android content is moved twice
 
 Use `adjustResize` as the standard window mode and avoid adding a second

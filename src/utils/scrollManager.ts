@@ -13,6 +13,18 @@ export interface ScrollCalculation {
   delta: number;
 }
 
+/** Return how far a bottom edge must move to clear the keyboard and spacing. */
+export function calculateKeyboardDisplacement(
+  viewport: ScrollViewport,
+  keyboardTop: number,
+  spacing: number,
+): number {
+  return Math.max(
+    0,
+    viewport.y + viewport.height - keyboardTop + Math.max(0, spacing),
+  );
+}
+
 /** Return the part of the measured view actually covered by the keyboard. */
 export function calculateKeyboardOverlap(
   viewport: ScrollViewport,
