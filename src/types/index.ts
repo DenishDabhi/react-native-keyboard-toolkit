@@ -52,7 +52,7 @@ export interface KeyboardAwareScrollViewProps extends ScrollViewProps {
 }
 
 export interface KeyboardAwareViewProps extends ViewProps {
-  /** Defaults to `smart`. `resize` relies on the platform window resize behavior. */
+  /** Defaults to `smart`; absolute-positioned views are moved above the keyboard. */
   behavior?: KeyboardBehavior;
   /** Extra space between the view content and the keyboard, in points. */
   keyboardSpacing?: number;

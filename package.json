@@ -1,7 +1,7 @@
 {
   "name": "react-native-keyboard-toolkit",
-  "version": "1.0.0",
-  "description": "Keyboard-aware ScrollView, keyboard avoiding view, input focus navigation, and keyboard state hooks for React Native on iOS and Android.",
+  "version": "1.0.1",
+  "description": "Keyboard-aware scrolling, views, sticky form actions, and keyboard hooks for React Native on iOS and Android.",
   "author": "Denish Dabhi <dabhidenish57@gmail.com>",
   "license": "MIT",
   "homepage": "https://github.com/DenishDabhi/react-native-keyboard-toolkit#readme",
@@ -44,7 +44,9 @@
     "android",
     "typescript",
     "keyboard-dismiss",
-    "keyboard-handling"
+    "keyboard-handling",
+    "sticky-button",
+    "sticky-footer"
   ],
   "publishConfig": {
     "access": "public"
@@ -67,8 +69,6 @@
   },
   "devDependencies": {
     "@babel/core": "^7.25.2",
-    "@babel/preset-env": "^7.25.3",
-    "@babel/runtime": "^7.25.0",
     "@react-native-community/cli": "20.2.0",
     "@react-native-community/cli-platform-android": "20.2.0",
     "@react-native-community/cli-platform-ios": "20.2.0",
