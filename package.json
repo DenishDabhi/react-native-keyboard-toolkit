@@ -1,6 +1,6 @@
 {
   "name": "react-native-keyboard-toolkit",
-  "version": "1.0.0",
+  "version": "1.0.1",
   "description": "Keyboard-aware ScrollView, keyboard avoiding view, input focus navigation, and keyboard state hooks for React Native on iOS and Android.",
   "author": "Denish Dabhi <dabhidenish57@gmail.com>",
   "license": "MIT",

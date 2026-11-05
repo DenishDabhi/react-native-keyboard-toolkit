@@ -994,7 +994,7 @@ The demo uses `react-native-safe-area-context` (a dev dependency of this reposit
 
 ## Contributing
 
-Contributions are welcome. See [`CONTRIBUTING.md`](CONTRIBUTING.md) and the [Code of Conduct](CODE_OF_CONDUCT.md).
+Issues and pull requests are welcome. See [CONTRIBUTING.md](CONTRIBUTING.md). If this library helps you, please give it a ⭐ on [GitHub](https://github.com/DenishDabhi/react-native-keyboard-toolkit).
 
 ```sh
 npm ci
@@ -1006,10 +1006,3 @@ Individual scripts: `npm run typecheck`, `npm run lint`, `npm run format:check`,
 ## License
 
 [MIT](LICENSE) © Denish Dabhi
-
-## Links
-
-- GitHub: <https://github.com/DenishDabhi/react-native-keyboard-toolkit>
-- Issues: <https://github.com/DenishDabhi/react-native-keyboard-toolkit/issues>
-- npm: <https://www.npmjs.com/package/react-native-keyboard-toolkit>
-- Changelog: [`CHANGELOG.md`](CHANGELOG.md)
