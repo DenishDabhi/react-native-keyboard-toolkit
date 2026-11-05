@@ -1,7 +1,19 @@
 import {
+  calculateKeyboardDisplacement,
   calculateKeyboardOverlap,
   calculateScrollOffset,
 } from '../../src/utils/scrollManager';
+
+describe('calculateKeyboardDisplacement', () => {
+  it('moves a sticky view only enough to clear the keyboard and spacing', () => {
+    expect(calculateKeyboardDisplacement({ y: 750, height: 50 }, 600, 12)).toBe(
+      212,
+    );
+    expect(calculateKeyboardDisplacement({ y: 400, height: 50 }, 600, 12)).toBe(
+      0,
+    );
+  });
+});
 
 describe('calculateKeyboardOverlap', () => {
   it('uses the keyboard frame and visible viewport intersection', () => {

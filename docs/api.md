@@ -22,8 +22,11 @@ underlying React Native `ScrollView`.
 
 Extends `ViewProps`. Supports `behavior`, `keyboardSpacing`, and `enabled`.
 Smart, scroll, and padding add bottom padding for the measured overlap. Resize
-and none do not add padding. This view does not scroll to reveal a hidden child.
-Its ref points to the underlying React Native `View`.
+and none do not adjust the layout. When `style.position` is `absolute`, the
+component animates the view upward by the distance from its measured bottom
+edge to the keyboard frame, plus `keyboardSpacing`. It returns to its original
+position when the keyboard hides. This view does not scroll to reveal a hidden
+child. Its ref points to the underlying React Native `View`.
 
 ## `KeyboardProvider`
 

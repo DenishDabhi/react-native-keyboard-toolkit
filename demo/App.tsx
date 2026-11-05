@@ -293,7 +293,7 @@ function DemoContent(): React.JSX.Element {
           contentContainerStyle={styles.formContent}
           keyboardDismissMode="interactive"
           keyboardShouldPersistTaps="handled"
-          keyboardSpacing={20}
+          // keyboardSpacing={130}
         >
           <View style={styles.formHeader}>
             <Text style={styles.formTitle}>Create your profile</Text>
@@ -316,22 +316,6 @@ function DemoContent(): React.JSX.Element {
               textAlignVertical="top"
             />
           </View>
-          <Pressable
-            accessibilityRole="button"
-            onPress={submit}
-            style={({ pressed }) => [
-              styles.submit,
-              pressed && styles.submitPressed,
-            ]}
-          >
-            <Text style={styles.submitText}>
-              {submitted ? 'Profile saved' : 'Save profile'}
-            </Text>
-            <Text style={styles.submitArrow}>→</Text>
-          </Pressable>
-          <KeyboardDismissButton style={styles.dismissButton}>
-            <Text style={styles.dismissText}>Dismiss keyboard</Text>
-          </KeyboardDismissButton>
         </KeyboardAwareScrollView>
       ) : (
         <KeyboardAwareView
@@ -345,6 +329,9 @@ function DemoContent(): React.JSX.Element {
               This view adds keyboard space without automatic scrolling.
             </Text>
             {fields.slice(0, 2).map(renderField)}
+            <KeyboardDismissButton style={styles.dismissButton}>
+              <Text style={styles.dismissText}>Dismiss keyboard</Text>
+            </KeyboardDismissButton>
           </View>
           <Pressable
             accessibilityRole="button"
@@ -357,19 +344,35 @@ function DemoContent(): React.JSX.Element {
           </Pressable>
         </KeyboardAwareView>
       )}
-
+      <KeyboardToolbar
+        inputRefs={allInputRefs}
+        onFocusedInputChange={setFocusedIndex}
+        doneText="Done"
+        onDone={() => setFocusedIndex(-1)}
+        style={styles.toolbar}
+      />
       <KeyboardAwareView
         behavior="smart"
         keyboardSpacing={12}
-        style={styles.toolbarContainer}
+        style={
+          mode === 'scroll' ? styles.stickyFooter : styles.toolbarContainer
+        }
       >
-        <KeyboardToolbar
-          inputRefs={allInputRefs}
-          onFocusedInputChange={setFocusedIndex}
-          doneText="Done"
-          onDone={() => setFocusedIndex(-1)}
-          style={styles.toolbar}
-        />
+        {mode === 'scroll' && (
+          <Pressable
+            accessibilityRole="button"
+            onPress={submit}
+            style={({ pressed }) => [
+              styles.submit,
+              pressed && styles.submitPressed,
+            ]}
+          >
+            <Text style={styles.submitText}>
+              {submitted ? 'Profile saved' : 'Save profile'}
+            </Text>
+            <Text style={styles.submitArrow}>→</Text>
+          </Pressable>
+        )}
       </KeyboardAwareView>
     </SafeAreaView>
   );
@@ -489,7 +492,7 @@ const styles = StyleSheet.create({
   behaviorButtonActive: { backgroundColor: '#EAF0FF', borderColor: '#A6BCFF' },
   behaviorLabel: { color: '#475467', fontSize: 11, fontWeight: '600' },
   behaviorLabelActive: { color: '#155EEF' },
-  formContent: { paddingHorizontal: 20, paddingTop: 9, paddingBottom: 24 },
+  formContent: { paddingHorizontal: 20, paddingTop: 9, paddingBottom: 150 },
   formHeader: { marginBottom: 17 },
   formTitle: { color: '#101828', fontSize: 21, fontWeight: '700' },
   formDescription: {
@@ -519,8 +522,11 @@ const styles = StyleSheet.create({
     borderRadius: 11,
     flexDirection: 'row',
     justifyContent: 'center',
-    minHeight: 50,
-    marginTop: 4,
+    // minHeight: 50,
+    paddingVertical: 14,
+    paddingHorizontal: 20,
+    // paddingBottom: 14,
+    // marginTop: 4,
   },
   submitPressed: { backgroundColor: '#1849A9' },
   submitText: { color: '#FFFFFF', fontSize: 14, fontWeight: '700' },
@@ -532,6 +538,19 @@ const styles = StyleSheet.create({
   },
   dismissButton: { alignItems: 'center', paddingVertical: 14 },
   dismissText: { color: '#475467', fontSize: 12, fontWeight: '600' },
+  stickyFooter: {
+    backgroundColor: '#F6F8FC',
+    borderTopColor: '#EAECF0',
+    borderTopWidth: 1,
+    left: 0,
+    paddingHorizontal: 20,
+    paddingTop: 8,
+    paddingBottom: 8,
+    // position: 'absolute',
+    right: 0,
+    bottom: 0,
+    zIndex: 1,
+  },
   viewDemo: {
     flex: 1,
     justifyContent: 'space-between',

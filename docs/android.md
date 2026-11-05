@@ -12,6 +12,11 @@ ended the viewport at that frame, the measured overlap is zero and no second
 keyboard-height inset is added. OEM keyboards and edge-to-edge configurations
 can still report coordinates relative to different window origins.
 
+For a sticky submit action, put an absolutely positioned
+`KeyboardAwareView` outside the scroll view. With `adjustResize`, Android may
+already move the footer as the window changes size; the measured keyboard frame
+is used to apply only any remaining displacement and configured spacing.
+
 ## Device checklist
 
 - Test Android 10+ devices/emulators and the app's minimum supported OS.
