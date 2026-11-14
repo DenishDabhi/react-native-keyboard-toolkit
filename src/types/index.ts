@@ -49,6 +49,8 @@ export interface KeyboardAwareScrollViewProps extends ScrollViewProps {
   keyboardSpacing?: number;
   /** Disable keyboard-driven padding and focus scrolling. */
   enabled?: boolean;
+  /** Pass the navigation focus state to resync keyboard metrics on refocus. */
+  isFocused?: boolean;
 }
 
 export interface KeyboardAwareViewProps extends ViewProps {
@@ -58,6 +60,8 @@ export interface KeyboardAwareViewProps extends ViewProps {
   keyboardSpacing?: number;
   /** Disable keyboard-driven layout changes. */
   enabled?: boolean;
+  /** Pass the navigation focus state to resync keyboard metrics on refocus. */
+  isFocused?: boolean;
 }
 
 export interface KeyboardProviderProps {

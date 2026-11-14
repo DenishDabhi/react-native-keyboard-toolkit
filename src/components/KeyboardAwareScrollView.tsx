@@ -28,6 +28,7 @@ export const KeyboardAwareScrollView: React.ForwardRefExoticComponent<
       behavior = 'smart',
       keyboardSpacing = DEFAULT_KEYBOARD_SPACING,
       enabled = true,
+      isFocused,
       contentContainerStyle,
       onScroll,
       onScrollBeginDrag,
@@ -39,7 +40,7 @@ export const KeyboardAwareScrollView: React.ForwardRefExoticComponent<
     },
     forwardedRef,
   ): React.JSX.Element {
-    const keyboard = useKeyboardState();
+    const keyboard = useKeyboardState({ isFocused });
     const debug = useKeyboardDebug();
     const scrollRef = useRef<KeyboardAwareScrollViewRef>(null);
     useImperativeHandle(forwardedRef, () => scrollRef.current!, []);

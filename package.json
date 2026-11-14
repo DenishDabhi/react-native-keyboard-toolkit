@@ -1,6 +1,6 @@
 {
   "name": "react-native-keyboard-toolkit",
-  "version": "1.0.1",
+  "version": "1.0.2",
   "description": "Keyboard-aware scrolling, views, sticky form actions, and keyboard hooks for React Native on iOS and Android.",
   "author": "Denish Dabhi <dabhidenish57@gmail.com>",
   "license": "MIT",
