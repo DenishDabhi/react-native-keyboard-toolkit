@@ -42,3 +42,30 @@ scroll view both respond to the same keyboard state; disable one with
 Place the scroll view inside the modal content and verify the modal's measured
 window frame. Presentation styles and window insets vary; test on the target
 platform rather than assuming the main screen's coordinates apply to a modal.
+
+## A navigation screen returns with stale keyboard spacing
+
+The shared keyboard state is reset when its last subscriber unmounts and is
+reconciled with `Keyboard.isVisible()` / `Keyboard.metrics()` when subscribers
+mount or the app returns to the foreground. For stack screens that stay mounted,
+pass the route's focus state to both aware components:
+
+```tsx
+const isFocused = useIsFocused();
+
+<KeyboardAwareScrollView isFocused={isFocused}>...</KeyboardAwareScrollView>
+<KeyboardAwareView isFocused={isFocused}>...</KeyboardAwareView>
+```
+
+`useIsFocused` comes from React Navigation; the toolkit itself does not require
+that package. Verify the lifecycle manually:
+
+1. Open the navigation regression demo, focus the Screen A input, and wait for
+   the scroll padding and sticky action to move.
+2. Press **Dismiss + open Screen B**, then **Go back to Screen A** without
+   focusing another input. The keyboard height and spacing should be zero.
+3. Repeat with a rapid navigation press and, on iOS, a cancelled swipe-back.
+4. Background and foreground the app while the keyboard is open; verify offsets
+   reflect the keyboard state after returning.
+5. Rotate the device or resize an Android split-screen window and check that
+   layout measurements are recalculated.

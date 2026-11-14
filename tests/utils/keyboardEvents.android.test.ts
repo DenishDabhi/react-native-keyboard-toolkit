@@ -1,5 +1,7 @@
 const mockListeners = new Map<string, (event: unknown) => void>();
 const mockRemove = jest.fn();
+const mockAddAppStateListener = jest.fn(() => ({ remove: mockRemove }));
+const mockAddDimensionsListener = jest.fn(() => ({ remove: mockRemove }));
 const mockAddListener = jest.fn(
   (eventName: string, listener: (event: unknown) => void) => {
     mockListeners.set(eventName, listener);
@@ -8,6 +10,8 @@ const mockAddListener = jest.fn(
 );
 
 jest.doMock('react-native', () => ({
+  AppState: { addEventListener: mockAddAppStateListener },
+  Dimensions: { addEventListener: mockAddDimensionsListener },
   Keyboard: {
     addListener: mockAddListener,
     isVisible: () => false,
@@ -21,6 +25,8 @@ describe('Android keyboard events', () => {
     jest.dontMock('react-native');
     mockListeners.clear();
     mockAddListener.mockClear();
+    mockAddAppStateListener.mockClear();
+    mockAddDimensionsListener.mockClear();
     mockRemove.mockClear();
   });
 
@@ -72,7 +78,9 @@ describe('Android keyboard events', () => {
       expect(notify).toHaveBeenCalledTimes(2);
 
       unsubscribe();
-      expect(mockRemove).toHaveBeenCalledTimes(2);
+      expect(mockRemove).toHaveBeenCalledTimes(4);
+      expect(mockAddAppStateListener).toHaveBeenCalledTimes(1);
+      expect(mockAddDimensionsListener).toHaveBeenCalledTimes(1);
       resetKeyboardStateForTests();
     });
   });

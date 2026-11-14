@@ -48,8 +48,12 @@ export function ContactForm() {
   return (
     <KeyboardAwareScrollView
       keyboardShouldPersistTaps="handled"
-      keyboardSpacing={16}
-      contentContainerStyle={{ padding: 20 }}
+      keyboardDismissMode="interactive"
+      behavior="smart"
+      keyboardSpacing={100}
+      contentContainerStyle={{
+        flexGrow: 1,
+      }}
     >
       <TextInput placeholder="Name" />
       <TextInput placeholder="Email" keyboardType="email-address" />
@@ -76,7 +80,7 @@ export function StickyForm() {
     <View style={{ flex: 1 }}>
       <KeyboardAwareScrollView
         keyboardShouldPersistTaps="handled"
-        keyboardSpacing={112} // leave room for the footer
+        keyboardSpacing={100} // leave room for the footer
         contentContainerStyle={{ padding: 20, paddingBottom: 96 }}
       >
         <TextInput placeholder="Name" />
@@ -145,15 +149,16 @@ export function SignUpForm() {
 
 Accepts all `ScrollView` props, forwards its ref to the `ScrollView`, and adds:
 
-| Prop              | Type                                                     | Default   | Description                                                                          |
-| ----------------- | -------------------------------------------------------- | --------- | ------------------------------------------------------------------------------------ |
-| `behavior`        | `'smart' \| 'scroll' \| 'resize' \| 'padding' \| 'none'` | `'smart'` | See [Behaviors](#behaviors).                                                         |
-| `keyboardSpacing` | `number`                                                 | `16`      | Gap (points) between the focused input and the keyboard. Negative values become `0`. |
-| `enabled`         | `boolean`                                                | `true`    | Turns keyboard padding and focus scrolling on or off.                                |
+| Prop              | Type                                                     | Default   | Description                                                                            |
+| ----------------- | -------------------------------------------------------- | --------- | -------------------------------------------------------------------------------------- |
+| `behavior`        | `'smart' \| 'scroll' \| 'resize' \| 'padding' \| 'none'` | `'smart'` | See [Behaviors](#behaviors).                                                           |
+| `keyboardSpacing` | `number`                                                 | `16`      | Gap (points) between the focused input and the keyboard. Negative values become `0`.   |
+| `enabled`         | `boolean`                                                | `true`    | Turns keyboard padding and focus scrolling on or off.                                  |
+| `isFocused`       | `boolean`                                                | –         | Optional navigation focus state; resets on blur and resyncs keyboard metrics on focus. |
 
 ### `KeyboardAwareView`
 
-Accepts all `View` props, forwards its ref to the native view, and supports `behavior`, `keyboardSpacing` (default `16`), and `enabled`.
+Accepts all `View` props, forwards its ref to the native view, and supports `behavior`, `keyboardSpacing` (default `16`), `enabled`, and optional `isFocused` navigation state.
 
 - **Normal layout:** adds bottom padding equal to the part of the view covered by the keyboard.
 - **`position: 'absolute'`:** animates the view up so it clears the keyboard plus `keyboardSpacing`.
@@ -216,11 +221,24 @@ const { focusedInput, refresh } = useFocusedInput();
 // focusedInput: { x, y, width, height } in window coordinates, or null
 ```
 
-| Hook                     | Returns                                                                                   |
-| ------------------------ | ----------------------------------------------------------------------------------------- |
-| `useKeyboardState()`     | `{ isVisible, height, progress (0 \| 1), animationDuration, screenY? }`                   |
-| `useKeyboardAnimation()` | `{ progress: Animated.Value, animationDuration }`                                         |
-| `useFocusedInput()`      | `{ focusedInput, refresh }` – the focused input's layout, and a function to re-measure it |
+For a screen that stays mounted in a navigation stack, pass its focus state to
+both keyboard-aware components. This does not add a React Navigation dependency
+to the toolkit:
+
+```tsx
+const isFocused = useIsFocused(); // from @react-navigation/native
+
+<KeyboardAwareScrollView isFocused={isFocused}>...</KeyboardAwareScrollView>
+<KeyboardAwareView isFocused={isFocused} style={footerStyle}>
+  ...
+</KeyboardAwareView>
+```
+
+| Hook                               | Returns                                                                                   |
+| ---------------------------------- | ----------------------------------------------------------------------------------------- |
+| `useKeyboardState({ isFocused? })` | `{ isVisible, height, progress (0 \| 1), animationDuration, screenY? }`                   |
+| `useKeyboardAnimation()`           | `{ progress: Animated.Value, animationDuration }`                                         |
+| `useFocusedInput()`                | `{ focusedInput, refresh }` – the focused input's layout, and a function to re-measure it |
 
 Example: animate a view with the keyboard.
 
@@ -249,6 +267,18 @@ function FadeWithKeyboard({ children }: { children: React.ReactNode }) {
 - Use React Native `TextInput` fields inside `KeyboardAwareScrollView`. Custom input wrappers must forward refs and support native measurement.
 - Use only one keyboard-spacing component per region to avoid adding space twice.
 - Keyboard coordinates can differ across devices, edge-to-edge modes, and modals — test on the devices you support.
+
+## Troubleshooting
+
+The stale keyboard-height / blank-space issue after navigating away with the
+keyboard open and returning is fixed in **1.0.2**. For stack screens that stay
+mounted, pass `useIsFocused()` to both `KeyboardAwareScrollView` and
+`KeyboardAwareView` so the state is reconciled on focus.
+
+Manual check: focus a Screen A field, select **Go to Screen B**, then use
+Screen B's **Back** button. Repeat with a fast transition and with the app
+backgrounded while the keyboard is open. Screen A should return with no
+keyboard-sized gap and its sticky button at the original position.
 
 More guides: [Installation](docs/installation.md) · [API](docs/api.md) · [Android](docs/android.md) · [iOS](docs/ios.md) · [Troubleshooting](docs/troubleshooting.md)
 

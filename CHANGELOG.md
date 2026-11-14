@@ -2,6 +2,10 @@
 
 All notable changes to this project are documented here.
 
+## 1.0.2 - 2026-11-14
+
+- Fix: stale keyboard height / blank space remaining after going back with the keyboard open and returning to the screen.
+
 ## 1.0.1 - 2026-11-05
 
 - Fix absolutely positioned `KeyboardAwareView` footers remaining behind the
