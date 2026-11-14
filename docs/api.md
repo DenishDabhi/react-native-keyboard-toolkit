@@ -11,6 +11,9 @@ Extends React Native `ScrollViewProps`.
   none disables keyboard adjustment.
 - `keyboardSpacing?: number` (default `16`): spacing in points.
 - `enabled?: boolean` (default `true`): disable keyboard adjustments.
+- `isFocused?: boolean`: optional navigation focus state. Pass `useIsFocused()`
+  from React Navigation to clear state on blur and resync native keyboard
+  metrics on focus; the library does not depend on React Navigation.
 
 The component measures its viewport and the focused native input. It adds
 scrollable bottom space based on measured viewport/keyboard-frame overlap,
@@ -20,7 +23,9 @@ underlying React Native `ScrollView`.
 
 ## `KeyboardAwareView`
 
-Extends `ViewProps`. Supports `behavior`, `keyboardSpacing`, and `enabled`.
+Extends `ViewProps`. Supports `behavior`, `keyboardSpacing`, `enabled`, and
+`isFocused` (with the same optional navigation integration as
+`KeyboardAwareScrollView`).
 Smart, scroll, and padding add bottom padding for the measured overlap. Resize
 and none do not adjust the layout. When `style.position` is `absolute`, the
 component animates the view upward by the distance from its measured bottom
@@ -59,8 +64,10 @@ before keyboard dismissal.
 
 ## Hooks
 
-- `useKeyboardState()` and its alias `useKeyboard()` return a stable
+- `useKeyboardState({ isFocused? })` and its alias `useKeyboard()` return a stable
   `KeyboardState`: `{ isVisible, height, progress, animationDuration, screenY? }`.
+  The optional focus flag resets state when false and re-reads current keyboard
+  metrics when true.
 - `useKeyboardAnimation()` returns `{ progress: Animated.Value,
 animationDuration }`.
 - `useFocusedInput()` returns `{ focusedInput, refresh }`; the layout is

@@ -25,13 +25,14 @@ export const KeyboardAwareView: React.ForwardRefExoticComponent<
       behavior = 'smart',
       keyboardSpacing = DEFAULT_KEYBOARD_SPACING,
       enabled = true,
+      isFocused,
       style,
       onLayout,
       ...props
     },
     forwardedRef,
   ): React.JSX.Element {
-    const keyboard = useKeyboardState();
+    const keyboard = useKeyboardState({ isFocused });
     const viewRef = useRef<KeyboardAwareViewRef>(null);
     useImperativeHandle(forwardedRef, () => viewRef.current!, []);
     const measurementSequence = useRef(0);

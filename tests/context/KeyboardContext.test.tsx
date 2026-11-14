@@ -1,6 +1,12 @@
 import React from 'react';
 import ReactTestRenderer, { act } from 'react-test-renderer';
-import { Keyboard, Text, type KeyboardEvent } from 'react-native';
+import {
+  AppState,
+  Dimensions,
+  Keyboard,
+  Text,
+  type KeyboardEvent,
+} from 'react-native';
 import { KeyboardProvider } from '../../src/context/KeyboardContext';
 import { useKeyboardState } from '../../src/hooks/useKeyboardState';
 import { resetKeyboardStateForTests } from '../../src/utils/keyboardEvents';
@@ -23,6 +29,14 @@ describe('KeyboardProvider', () => {
         );
         return { remove };
       });
+    const removeAppStateListener = jest.fn();
+    jest.spyOn(AppState, 'addEventListener').mockReturnValue({
+      remove: removeAppStateListener,
+    });
+    const removeDimensionsListener = jest.fn();
+    jest.spyOn(Dimensions, 'addEventListener').mockReturnValue({
+      remove: removeDimensionsListener,
+    });
     const debug = jest
       .spyOn(console, 'debug')
       .mockImplementation(() => undefined);
@@ -56,5 +70,7 @@ describe('KeyboardProvider', () => {
     expect(debug).toHaveBeenCalledTimes(1);
     await act(async () => renderer!.unmount());
     expect(remove).toHaveBeenCalledTimes(1);
+    expect(removeAppStateListener).toHaveBeenCalledTimes(1);
+    expect(removeDimensionsListener).toHaveBeenCalledTimes(1);
   });
 });

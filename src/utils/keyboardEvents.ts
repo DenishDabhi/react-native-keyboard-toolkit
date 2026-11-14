@@ -1,4 +1,6 @@
 import {
+  AppState,
+  Dimensions,
   Keyboard,
   type KeyboardEvent,
   type EmitterSubscription,
@@ -18,9 +20,23 @@ let state = initialState;
 let listeners: EmitterSubscription[] = [];
 const subscribers = new Set<() => void>();
 
+function publish(nextState: KeyboardState): void {
+  if (
+    state.isVisible === nextState.isVisible &&
+    state.height === nextState.height &&
+    state.progress === nextState.progress &&
+    state.animationDuration === nextState.animationDuration &&
+    state.screenY === nextState.screenY
+  ) {
+    return;
+  }
+  state = nextState;
+  subscribers.forEach(subscriber => subscriber());
+}
+
 function update(event: KeyboardEvent, visible: boolean): void {
   const coordinates = event.endCoordinates;
-  state = {
+  publish({
     isVisible: visible,
     height: visible ? Math.max(0, coordinates?.height ?? 0) : 0,
     progress: visible ? 1 : 0,
@@ -31,29 +47,39 @@ function update(event: KeyboardEvent, visible: boolean): void {
     ...(visible && typeof coordinates?.screenY === 'number'
       ? { screenY: coordinates.screenY }
       : {}),
-  };
-  subscribers.forEach(subscriber => subscriber());
+  });
 }
 
-function syncCurrentKeyboardState(): void {
+function resetKeyboardState(): void {
+  publish(initialState);
+}
+
+/** Reconcile the shared snapshot with the platform's current keyboard metrics. */
+export function synchronizeKeyboardState(isFocused = true): void {
+  if (!isFocused) {
+    resetKeyboardState();
+    return;
+  }
+
   const metrics =
     typeof Keyboard.metrics === 'function' ? Keyboard.metrics() : undefined;
   const isVisible =
     typeof Keyboard.isVisible === 'function'
       ? Keyboard.isVisible()
       : metrics != null;
+
   if (!isVisible || !metrics) {
+    resetKeyboardState();
     return;
   }
 
-  state = {
+  publish({
     isVisible: true,
     height: metrics.height,
     progress: 1,
     animationDuration: 0,
     screenY: metrics.screenY,
-  };
-  subscribers.forEach(subscriber => subscriber());
+  });
 }
 
 function startListening(): void {
@@ -64,23 +90,39 @@ function startListening(): void {
         update(event, event.endCoordinates.height > 0),
       ),
     ];
-    syncCurrentKeyboardState();
-    return;
+  } else {
+    const showSubscription = Keyboard.addListener(names.show, event =>
+      update(event, true),
+    );
+    const hideSubscription = Keyboard.addListener(names.hide, event =>
+      update(event, false),
+    );
+    listeners = [showSubscription, hideSubscription];
   }
 
-  const showSubscription = Keyboard.addListener(names.show, event =>
-    update(event, true),
+  listeners.push(
+    AppState.addEventListener('change', nextState => {
+      if (nextState === 'active') {
+        synchronizeKeyboardState();
+      } else {
+        resetKeyboardState();
+      }
+    }),
   );
-  const hideSubscription = Keyboard.addListener(names.hide, event =>
-    update(event, false),
+  listeners.push(
+    Dimensions.addEventListener('change', () => {
+      if (typeof Keyboard.metrics === 'function') {
+        synchronizeKeyboardState();
+      }
+    }),
   );
-  listeners = [showSubscription, hideSubscription];
-  syncCurrentKeyboardState();
+  synchronizeKeyboardState();
 }
 
 function stopListening(): void {
   listeners.forEach(subscription => subscription.remove());
   listeners = [];
+  resetKeyboardState();
 }
 
 /** Subscribe to the shared keyboard event stream. */

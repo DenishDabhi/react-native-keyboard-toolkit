@@ -1,6 +1,7 @@
 import React, { createRef, useEffect, useRef, useState } from 'react';
 import {
   Keyboard,
+  Modal,
   Pressable,
   ScrollView,
   StyleSheet,
@@ -180,11 +181,140 @@ function UtilityActions({
   );
 }
 
+function NavigationRegressionDemo({
+  visible,
+  onClose,
+}: {
+  visible: boolean;
+  onClose: () => void;
+}): React.JSX.Element {
+  const [screen, setScreen] = useState<'form' | 'details'>('form');
+  const isFormFocused = screen === 'form';
+  const keyboard = useKeyboardState();
+  const close = () => {
+    setScreen('form');
+    onClose();
+  };
+  const goToScreenB = () => {
+    Keyboard.dismiss();
+    setScreen('details');
+  };
+  const handleBackRequest = () => {
+    if (screen === 'details') {
+      setScreen('form');
+    } else if (keyboard.isVisible) {
+      Keyboard.dismiss();
+    } else {
+      close();
+    }
+  };
+
+  return (
+    <Modal
+      animationType="slide"
+      onRequestClose={handleBackRequest}
+      transparent={false}
+      visible={visible}
+    >
+      <SafeAreaView style={styles.reproScreen}>
+        <View
+          style={[styles.reproRoute, !isFormFocused && styles.reproRouteHidden]}
+        >
+          <View style={styles.reproHeader}>
+            <Text style={styles.formTitle}>Screen A · Form</Text>
+            <Pressable
+              accessibilityRole="button"
+              onPress={goToScreenB}
+              style={styles.reproHeaderButton}
+            >
+              <Text style={styles.reproLink}>Go to Screen B</Text>
+            </Pressable>
+          </View>
+          <KeyboardAwareScrollView
+            contentContainerStyle={styles.reproForm}
+            isFocused={isFormFocused}
+            keyboardDismissMode="interactive"
+            keyboardShouldPersistTaps="handled"
+          >
+            <Text style={styles.formDescription}>
+              Focus any field, then navigate away and return without focusing
+              another input. No keyboard-sized gap should remain.
+            </Text>
+            {[
+              { label: 'Name', placeholder: 'Alex Morgan' },
+              {
+                label: 'Email',
+                placeholder: 'alex@example.com',
+                keyboardType: 'email-address' as const,
+              },
+              { label: 'Company', placeholder: 'Your organization' },
+              { label: 'Notes', placeholder: 'Add a note' },
+            ].map(field => (
+              <View key={field.label} style={styles.reproField}>
+                <Text style={styles.label}>{field.label}</Text>
+                <TextInput
+                  accessibilityLabel={field.label}
+                  keyboardType={field.keyboardType}
+                  placeholder={field.placeholder}
+                  style={styles.input}
+                />
+              </View>
+            ))}
+          </KeyboardAwareScrollView>
+          <KeyboardAwareView
+            isFocused={isFormFocused}
+            keyboardSpacing={12}
+            style={styles.reproFooter}
+          >
+            <Pressable
+              accessibilityRole="button"
+              onPress={() => Keyboard.dismiss()}
+              style={styles.reproFooterButton}
+            >
+              <Text style={styles.submitText}>Save form</Text>
+            </Pressable>
+          </KeyboardAwareView>
+        </View>
+        <View
+          style={[styles.reproRoute, isFormFocused && styles.reproRouteHidden]}
+        >
+          <View style={styles.reproHeader}>
+            <Pressable
+              accessibilityRole="button"
+              accessibilityLabel="Back to Screen A"
+              onPress={() => setScreen('form')}
+              style={styles.reproHeaderButton}
+            >
+              <Text style={styles.reproLink}>‹ Back</Text>
+            </Pressable>
+            <Text style={styles.formTitle}>Screen B</Text>
+            <View style={styles.reproHeaderButton} />
+          </View>
+          <View style={styles.reproDetails}>
+            <Text style={styles.formDescription}>
+              Screen A remains mounted behind this screen, like a stack route.
+              Go back to confirm its keyboard spacing and sticky button reset.
+            </Text>
+          </View>
+        </View>
+        <Pressable
+          accessibilityRole="button"
+          onPress={close}
+          style={styles.reproClose}
+        >
+          <Text style={styles.reproLink}>Close demo</Text>
+        </Pressable>
+      </SafeAreaView>
+    </Modal>
+  );
+}
+
 function DemoContent(): React.JSX.Element {
   const [mode, setMode] = useState<DemoMode>('scroll');
   const [behavior, setBehavior] = useState<(typeof behaviors)[number]>('smart');
   const [focusedIndex, setFocusedIndex] = useState(-1);
   const [submitted, setSubmitted] = useState(false);
+  const [showNavigationRepro, setShowNavigationRepro] = useState(false);
   const inputRefs = useRef(
     Array.from({ length: fields.length + 1 }, () => createRef<TextInputRef>()),
   );
@@ -236,6 +366,13 @@ function DemoContent(): React.JSX.Element {
           focusedIndex={focusedIndex}
           firstInputRef={allInputRefs[0]}
         />
+        <Pressable
+          accessibilityRole="button"
+          onPress={() => setShowNavigationRepro(true)}
+          style={styles.reproLaunch}
+        >
+          <Text style={styles.reproLink}>Open navigation regression demo</Text>
+        </Pressable>
         <View style={styles.modePicker}>
           {(['scroll', 'view'] as const).map(item => (
             <Pressable
@@ -374,6 +511,10 @@ function DemoContent(): React.JSX.Element {
           </Pressable>
         )}
       </KeyboardAwareView>
+      <NavigationRegressionDemo
+        visible={showNavigationRepro}
+        onClose={() => setShowNavigationRepro(false)}
+      />
     </SafeAreaView>
   );
 }
@@ -560,6 +701,39 @@ const styles = StyleSheet.create({
   toolbarContainer: {
     alignSelf: 'stretch',
     backgroundColor: '#F6F8FC',
+  },
+  reproLaunch: { alignSelf: 'flex-start', paddingTop: 10 },
+  reproLink: { color: '#155EEF', fontSize: 12, fontWeight: '700' },
+  reproScreen: { backgroundColor: '#F6F8FC', flex: 1 },
+  reproHeader: {
+    alignItems: 'center',
+    flexDirection: 'row',
+    justifyContent: 'space-between',
+    paddingHorizontal: 20,
+    paddingVertical: 16,
+  },
+  reproHeaderButton: { minWidth: 96 },
+  reproRoute: { flex: 1 },
+  reproRouteHidden: { display: 'none' },
+  reproForm: { gap: 16, padding: 20 },
+  reproField: { gap: 6 },
+  reproDetails: { flex: 1, padding: 20 },
+  reproClose: { alignSelf: 'center', padding: 12 },
+  reproFooter: {
+    backgroundColor: '#FFFFFF',
+    borderTopColor: '#EAECF0',
+    borderTopWidth: 1,
+    bottom: 0,
+    left: 0,
+    padding: 12,
+    position: 'absolute',
+    right: 0,
+  },
+  reproFooterButton: {
+    alignItems: 'center',
+    backgroundColor: '#155EEF',
+    borderRadius: 11,
+    padding: 14,
   },
   toolbar: {
     backgroundColor: '#FFFFFF',
